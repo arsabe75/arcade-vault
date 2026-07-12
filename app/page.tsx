@@ -1,65 +1,122 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <main className="av-main">
+        {/* Hero */}
+        <section className="av-hero">
+          <h1>ARCADE VAULT</h1>
+          <p className="sub">
+            <span className="blink">▸</span> PRESIONE START{" "}
+            <span className="blink">◂</span>
           </p>
+        </section>
+
+        {/* Filters */}
+        <div className="av-filters">
+          <div className="av-search">
+            <span className="ico">▶</span>
+            <input type="text" placeholder="BUSCAR JUEGO..." />
+          </div>
+          <div className="av-chips">
+            <button className="chip active">TODOS</button>
+            <button className="chip">ARCADE</button>
+            <button className="chip">RETRO</button>
+            <button className="chip">PUZZLE</button>
+            <button className="chip">ACCIÓN</button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Game Grid */}
+        <div className="av-grid">
+          {/* Card 1 — Tetro */}
+          <div className="card">
+            <div className="cover">
+              <span className="label">ARCADE</span>
+              <div className="cover-bg cover-tetro" />
+            </div>
+            <div className="meta">
+              <div className="title">TETRO BLAST</div>
+              <div className="desc">
+                Encaja las piezas antes que el tiempo acabe.
+              </div>
+              <div className="row">
+                <div className="score-badge">
+                  HIGH SCORE <b>324,850</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2 — Snake */}
+          <div className="card">
+            <div className="cover">
+              <span className="label">RETRO</span>
+              <div className="cover-bg cover-snake" />
+            </div>
+            <div className="meta">
+              <div className="title">SNAKE-X</div>
+              <div className="desc">
+                Crece sin morderte la cola. Modo espejo incluido.
+              </div>
+              <div className="row">
+                <div className="score-badge">
+                  HIGH SCORE <b>98,720</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3 — Invaders */}
+          <div className="card">
+            <div className="cover">
+              <span className="label">ARCADE</span>
+              <div className="cover-bg cover-invaders" />
+            </div>
+            <div className="meta">
+              <div className="title">INVADERS++</div>
+              <div className="desc">
+                Defiende la Tierra. Noventa y nueve oleadas.
+              </div>
+              <div className="row">
+                <div className="score-badge">
+                  HIGH SCORE <b>512,400</b>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Buttons showcase */}
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            justifyContent: "center",
+            flexWrap: "wrap",
+            padding: "0 32px 64px",
+          }}
+        >
+          <button className="btn">JUGAR AHORA</button>
+          <button className="btn magenta">HIGH SCORES</button>
+          <button className="btn yellow pulse">NUEVO!</button>
+          <button className="btn ghost">VER MÁS</button>
         </div>
       </main>
-    </div>
+
+      {/* Footer */}
+      <footer
+        style={{
+          borderTop: "1px solid var(--line)",
+          padding: "20px 32px",
+          textAlign: "center",
+          color: "var(--ink-faint)",
+          fontFamily: "var(--mono)",
+          fontSize: 11,
+          letterSpacing: "0.16em",
+        }}
+      >
+        © 2026 ARCADE VAULT · HECHO CON PIXELES Y NEÓN · v2.6.0
+      </footer>
+    </>
   );
 }

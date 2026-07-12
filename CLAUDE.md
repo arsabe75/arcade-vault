@@ -10,26 +10,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Development follows **Spec Driven Design** using `/spec` and `/spec-impl` workflows, based on [Klerith/fernando-skills](https://github.com/Klerith/fernando-skills).
 
-## Commands
-
-```bash
-npm run dev      # Start dev server with Turbopack (default bundler)
-npm run build    # Production build
-npm run start    # Start production server
-npm run lint     # Run ESLint
-```
-
 No test runner is configured yet.
+
+## Skills
+
+Usa siempre /frontend-design para diseñar la interfaz de usuario
 
 ## Tech stack & version notes
 
-| Layer | Version | Notes |
-|-------|---------|-------|
-| Next.js | 16.2.10 | App Router only. **Breaking changes vs older Next.js** — always consult `node_modules/next/dist/docs/` before writing route/page/layout code. |
-| React | 19.2.4 | Server Components by default for pages and layouts. |
-| Tailwind CSS | v4 | Uses `@import "tailwindcss"` in CSS (not the old `@tailwind base/components/utilities`). PostCSS plugin: `@tailwindcss/postcss`. |
-| TypeScript | 5 | Strict mode. Path alias `@/*` → project root. |
-| ESLint | 9 | Flat config (`eslint.config.mjs`) with `eslint-config-next` core-web-vitals + TypeScript rules. |
+| Layer        | Version | Notes                                                                                                                                         |
+| ------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Next.js      | 16.2.10 | App Router only. **Breaking changes vs older Next.js** — always consult `node_modules/next/dist/docs/` before writing route/page/layout code. |
+| React        | 19.2.4  | Server Components by default for pages and layouts.                                                                                           |
+| Tailwind CSS | v4      | Uses `@import "tailwindcss"` in CSS (not the old `@tailwind base/components/utilities`). PostCSS plugin: `@tailwindcss/postcss`.              |
+| TypeScript   | 5       | Strict mode. Path alias `@/*` → project root.                                                                                                 |
+| ESLint       | 9       | Flat config (`eslint.config.mjs`) with `eslint-config-next` core-web-vitals + TypeScript rules.                                               |
 
 ### Critical Next.js 16 differences
 
