@@ -1,9 +1,8 @@
 export default function Home() {
   return (
     <>
-      <main className="av-main">
-        {/* Hero */}
-        <section className="av-hero">
+      {/* Hero */}
+      <section className="av-hero">
           <h1>ARCADE VAULT</h1>
           <p className="sub">
             <span className="blink">▸</span> PRESIONE START{" "}
@@ -101,22 +100,6 @@ export default function Home() {
           <button className="btn yellow pulse">NUEVO!</button>
           <button className="btn ghost">VER MÁS</button>
         </div>
-      </main>
-
-      {/* Footer */}
-      <footer
-        style={{
-          borderTop: "1px solid var(--line)",
-          padding: "20px 32px",
-          textAlign: "center",
-          color: "var(--ink-faint)",
-          fontFamily: "var(--mono)",
-          fontSize: 11,
-          letterSpacing: "0.16em",
-        }}
-      >
-        © 2026 ARCADE VAULT · HECHO CON PIXELES Y NEÓN · v2.6.0
-      </footer>
     </>
   );
 }
