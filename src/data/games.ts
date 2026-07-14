@@ -12,92 +12,92 @@ export interface Game {
 
 export const GAMES: Game[] = [
   {
-    id: "space-lancers",
-    title: "SPACE LANCERS",
-    short: "Derriba oleadas alienígenas en el vacío estelar.",
-    long: "Pilota la LANCE-X7 a través del cinturón de Orión. Cada oleada trae formaciones más agresivas y jefes de flota que pondrán a prueba tus reflejos. Recolecta módulos de energía para cargar el RAYO DESTRUCTOR y limpia el sector antes de que la invasión llegue a la Tierra.",
-    cat: "SHOOTER",
-    cover: "space-lancers",
-    color: "cyan",
-    best: 984_200,
-    plays: "2.1M",
-  },
-  {
-    id: "neon-kombat",
-    title: "NEON KOMBAT",
-    short: "Enfréntate en duelos de lucha con estética cyberpunk.",
-    long: "Elige entre 12 luchadores aumentados con implantes cibernéticos y domina los combates en arenas iluminadas con neón. Ejecuta combos especiales, rompe la guardia del rival y desata tu SUPER MOVIMIENTO para ganar la pelea ante una multitud virtual que ruge con cada golpe.",
-    cat: "VERSUS",
-    cover: "neon-kombat",
-    color: "magenta",
-    best: 567_800,
-    plays: "1.8M",
-  },
-  {
-    id: "crystal-maze",
-    title: "CRYSTAL MAZE",
-    short: "Resuelve laberintos de cristal antes de que el tiempo se agote.",
-    long: "Gira pasillos, alinea espejos y desbloquea puertas de energía en 60 niveles diseñados a mano. Cada cristal que recolectas activa un nuevo camino, pero el cronómetro no se detiene. Solo los jugadores más astutos lograrán salir de las profundidades del LABERINTO DE CRISTAL.",
-    cat: "PUZZLE",
-    cover: "crystal-maze",
-    color: "green",
-    best: 345_600,
-    plays: "3.4M",
-  },
-  {
-    id: "star-raiders",
-    title: "STAR RAIDERS",
-    short: "Saquea bases estelares y escapa con el botín.",
-    long: "Infíltate en estaciones espaciales abandonadas repletas de defensas automáticas y drones centinela. Esquiva láseres, piratea terminales y llena tus bolsillos con núcleos de energía antes de que el sistema de autodestrucción alcance el punto de no retorno.",
+    id: "bloque-buster",
+    title: "BLOQUE BUSTER",
+    short: "Rebota la pelota y destruye muros de neón.",
+    long: "Pilota una nave-paleta y rebota un núcleo de plasma para pulverizar muros de bloques cromáticos. Cada nivel reorganiza la grilla en patrones imposibles. ¿Hasta dónde llegará tu racha?",
     cat: "ARCADE",
-    cover: "star-raiders",
-    color: "yellow",
-    best: 1_250_000,
-    plays: "4.7M",
-  },
-  {
-    id: "void-hunters",
-    title: "VOID HUNTERS",
-    short: "Caza criaturas abisales en las profundidades del océano.",
-    long: "Desciende a bordo del batiscafo ABYSS-9 hacia regiones inexploradas del océano profundo. Ilumina criaturas bioluminiscentes, evita depredadores colosales y documenta especies desconocidas. Cada inmersión genera un ecosistema procedural distinto.",
-    cat: "ARCADE",
-    cover: "void-hunters",
+    cover: "cover-bricks",
     color: "cyan",
-    best: 712_300,
-    plays: "890K",
+    best: 28450,
+    plays: "12.4K",
   },
   {
-    id: "hex-invaders",
-    title: "HEX INVADERS",
-    short: "Defiende la última ciudad del asedio hexagonal alienígena.",
-    long: "Los invasores hexagonales descienden en formaciones geométricas imposibles. Tus torretas de defensa son todo lo que se interpone entre ellos y la ciudadela. Rota tus cañones en 360°, prioriza las amenazas entrantes y activa el ESCUDO HEX cuando la situación sea insostenible.",
-    cat: "SHOOTER",
-    cover: "hex-invaders",
-    color: "magenta",
-    best: 1_890_500,
-    plays: "5.2M",
-  },
-  {
-    id: "quantum-drift",
-    title: "QUANTUM DRIFT",
-    short: "Derrapa entre dimensiones cuánticas en carreras interdimensionales.",
-    long: "Cada vuelta cambia las leyes de la física: gravedad, fricción y masa mutan en tiempo real. Pilota tu nave en 8 circuitos cuánticos, usa portales para adelantar posiciones y gestiona tu núcleo de fase para cambiar de dimensión en el momento justo.",
-    cat: "VERSUS",
-    cover: "quantum-drift",
-    color: "green",
-    best: 423_100,
-    plays: "2.9M",
-  },
-  {
-    id: "cyber-solitaire",
-    title: "CYBER SOLITAIRE",
-    short: "El clásico solitario con un giro hacker distópico.",
-    long: "Desencripta mazos de datos en este solitario ambientado en una terminal de los 80. Cada carta que mueves desbloquea fragmentos de una conspiración corporativa. Completa las cuatro suites para revelar la verdad. Incluye modo contrarreloj y ranking global de decrypters.",
+    id: "caida",
+    title: "CAÍDA",
+    short: "Encaja las piezas antes de que el techo te aplaste.",
+    long: "Piezas geométricas descienden desde la oscuridad. Rótalas, encástralas y limpia líneas para sobrevivir. La velocidad aumenta sin piedad cada 10 líneas.",
     cat: "PUZZLE",
-    cover: "cyber-solitaire",
+    cover: "cover-tetro",
+    color: "magenta",
+    best: 184220,
+    plays: "31.8K",
+  },
+  {
+    id: "serpentina",
+    title: "SERPENTINA",
+    short: "Crece sin morder tu propia cola.",
+    long: "Una serpiente de luz recorre la grilla buscando núcleos magenta. Cada bocado la alarga y la hace más veloz. Un movimiento en falso y se devora a sí misma.",
+    cat: "ARCADE",
+    cover: "cover-snake",
+    color: "green",
+    best: 7820,
+    plays: "9.1K",
+  },
+  {
+    id: "gloton",
+    title: "GLOTÓN",
+    short: "Devora puntos y escapa de los fantasmas.",
+    long: "Un círculo glotón patrulla un laberinto coleccionando puntos luminosos. Cuatro espectros lo persiguen, pero cada cierto tiempo aparece una píldora que invierte los papeles.",
+    cat: "ARCADE",
+    cover: "cover-glot",
     color: "yellow",
-    best: 156_700,
-    plays: "6.1M",
+    best: 96400,
+    plays: "27.2K",
+  },
+  {
+    id: "invasores",
+    title: "INVASORES",
+    short: "Defiende el planeta de filas alienígenas.",
+    long: "Olas de pixeles hostiles descienden formación tras formación. Mueve tu cañón en horizontal y abre fuego con precisión, antes de que toquen la superficie.",
+    cat: "SHOOTER",
+    cover: "cover-invaders",
+    color: "green",
+    best: 54190,
+    plays: "18.0K",
+  },
+  {
+    id: "rocas",
+    title: "ROCAS",
+    short: "Pulveriza asteroides en gravedad cero.",
+    long: "Tu nave triangular flota en vacío absoluto. Dispara y rota para dividir rocas en fragmentos cada vez más pequeños. Cuidado con los OVNIs en el horizonte.",
+    cat: "SHOOTER",
+    cover: "cover-rocas",
+    color: "yellow",
+    best: 41200,
+    plays: "15.6K",
+  },
+  {
+    id: "ranaria",
+    title: "RANARIA",
+    short: "Cruza la autopista de pixeles.",
+    long: "Salta entre carriles de coches a toda velocidad y troncos a la deriva en el río. Llega a los nenúfares antes de que se acabe el tiempo.",
+    cat: "ARCADE",
+    cover: "cover-rana",
+    color: "green",
+    best: 18900,
+    plays: "6.4K",
+  },
+  {
+    id: "duelo-pixel",
+    title: "DUELO PIXEL",
+    short: "Dos paletas. Una pelota. Reflejos máximos.",
+    long: "El duelo más puro: dos paletas verticales se enfrentan por rebotar una pelota luminosa. Modo solitario contra la CPU o partida local a dos jugadores.",
+    cat: "VERSUS",
+    cover: "cover-duelo",
+    color: "cyan",
+    best: 24,
+    plays: "4.2K",
   },
 ];
 
@@ -116,50 +116,40 @@ export interface ScoreRow {
   date: string;
 }
 
-/**
- * Deterministic pseudo-random number generator (Mulberry32).
- * Same seed always produces the same sequence of scores.
- */
-function mulberry32(seed: number): () => number {
-  return () => {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
 import { PLAYERS } from "./players";
 
+/**
+ * Deterministic seeded PRNG matching the reference template's algorithm.
+ * LCG: s = (s * 9301 + 49297) % 233280
+ */
 export function seededScores(
   seed: number,
   count: number = 12,
 ): ScoreRow[] {
-  const rng = mulberry32(seed);
-  const shuffled = [...PLAYERS].sort(() => rng() - 0.5);
-
+  let s = seed;
+  const rand = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  const used = new Set<string>();
   const rows: ScoreRow[] = [];
 
-  for (let i = 0; i < Math.min(count, shuffled.length); i++) {
-    const baseScore = 100_000 + seed * 73_421;
-    const spread = Math.floor(rng() * baseScore * 0.6);
-    const score = baseScore - spread + Math.floor(rng() * 50_000);
-
-    const day = String(Math.floor(rng() * 28) + 1).padStart(2, "0");
-    const month = String(Math.floor(rng() * 12) + 1).padStart(2, "0");
-    const year = 2026;
-
+  for (let i = 0; i < count; i++) {
+    let name: string;
+    do {
+      name = PLAYERS[Math.floor(rand() * PLAYERS.length)];
+    } while (used.has(name) && used.size < PLAYERS.length);
+    used.add(name);
+    const base = Math.floor(50000 + rand() * 250000);
+    const score = base - i * Math.floor(2000 + rand() * 4000);
+    const day = String(1 + Math.floor(rand() * 28)).padStart(2, "0");
+    const mon = String(1 + Math.floor(rand() * 12)).padStart(2, "0");
     rows.push({
       rank: i + 1,
-      name: shuffled[i],
-      score,
-      date: `${day}/${month}/${year}`,
+      name,
+      score: Math.max(score, 1000),
+      date: `${day}/${mon}/2026`,
     });
   }
-
-  return rows.sort((a, b) => b.score - a.score).map((row, idx) => ({
-    ...row,
-    rank: idx + 1,
+  return rows.sort((a, b) => b.score - a.score).map((r, i) => ({
+    ...r,
+    rank: i + 1,
   }));
 }

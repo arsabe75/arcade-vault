@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GAMES } from "@/src/data/games";
-import Button from "./Button";
 import GameOverModal from "./GameOverModal";
 
 export default function GamePlayer({ id }: { id: string }) {
@@ -12,12 +11,11 @@ export default function GamePlayer({ id }: { id: string }) {
   const game = GAMES.find((g) => g.id === id);
 
   const [score, setScore] = useState(0);
-  const [level, setLevel] = useState(1);
   const [lives, setLives] = useState(3);
+  const [level, setLevel] = useState(1);
   const [paused, setPaused] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [playerName, setPlayerName] = useState("JUGADOR 1");
+  const [over, setOver] = useState(false);
+  const [playerName, setPlayerName] = useState("INVITADO");
 
   // Load player name from localStorage
   useEffect(() => {
@@ -34,54 +32,26 @@ export default function GamePlayer({ id }: { id: string }) {
 
   // Score simulation
   useEffect(() => {
-    if (paused || gameOver) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      return;
-    }
+    if (over || paused) return;
+    const t = setInterval(
+      () => setScore((s) => s + Math.floor(10 + Math.random() * 90)),
+      220,
+    );
+    return () => clearInterval(t);
+  }, [over, paused]);
 
-    intervalRef.current = setInterval(() => {
-      setScore((prev) => {
-        const next = prev + Math.floor(Math.random() * 120) + 30;
+  // Level up
+  useEffect(() => {
+    if (score > 0 && score % 2500 < 100) setLevel((l) => l + 1);
+  }, [score]);
 
-        // Level up every 2500 points
-        const newLevel = Math.floor(next / 2500) + 1;
-        if (newLevel > level) setLevel(newLevel);
-
-        // Simulate losing a life occasionally
-        if (next > 0 && next % 8000 < 60 && lives > 0) {
-          setLives((l) => {
-            const nl = l - 1;
-            if (nl <= 0) {
-              if (intervalRef.current) clearInterval(intervalRef.current);
-              // Delay game over slightly so score updates first
-              setTimeout(() => setGameOver(true), 200);
-            }
-            return nl;
-          });
-        }
-
-        return next;
-      });
-    }, 120);
-
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [paused, gameOver, level, lives]);
-
-  const handlePause = useCallback(() => setPaused((v) => !v), []);
-  const handleEnd = useCallback(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setGameOver(true);
-    setPaused(false);
-  }, []);
-
-  const handleRestart = useCallback(() => {
+  const endGame = useCallback(() => setOver(true), []);
+  const restart = useCallback(() => {
     setScore(0);
-    setLevel(1);
     setLives(3);
+    setLevel(1);
     setPaused(false);
-    setGameOver(false);
+    setOver(false);
   }, []);
 
   const handleExit = useCallback(() => {
@@ -103,9 +73,7 @@ export default function GamePlayer({ id }: { id: string }) {
       >
         JUEGO NO ENCONTRADO
         <div style={{ marginTop: 24 }}>
-          <Link href="/">
-            <Button variant="cyan">← VOLVER AL VAULT</Button>
-          </Link>
+          <Link href="/">← VOLVER AL VAULT</Link>
         </div>
       </div>
     );
@@ -115,38 +83,37 @@ export default function GamePlayer({ id }: { id: string }) {
     <div className="av-player fade-in">
       {/* HUD */}
       <div className="player-hud">
-        <div className="hud-stat">
-          <span className="l">JUGADOR</span>
-          <span className="v">{playerName}</span>
-        </div>
-        <div className="hud-stat">
-          <span className="l">PUNTUACIÓN</span>
-          <span className="v">{score.toLocaleString("en-US")}</span>
-        </div>
-        <div className="hud-stat lives">
-          <span className="l">VIDAS</span>
-          <span className="v">
-            {Array.from({ length: lives }, (_, i) => (
-              <span key={i}>♥ </span>
-            ))}
-            {lives === 0 && "—"}
-          </span>
-        </div>
-        <div className="hud-stat level">
-          <span className="l">NIVEL</span>
-          <span className="v">{level}</span>
+        <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+          <div className="hud-stat">
+            <div className="l">Jugador</div>
+            <div className="v" style={{ color: "var(--ink)" }}>
+              {playerName}
+            </div>
+          </div>
+          <div className="hud-stat">
+            <div className="l">Puntuación</div>
+            <div className="v">{score.toLocaleString("es-ES")}</div>
+          </div>
+          <div className="hud-stat lives">
+            <div className="l">Vidas</div>
+            <div className="v">
+              {"♥ ".repeat(lives).trim() || "—"}
+            </div>
+          </div>
+          <div className="hud-stat level">
+            <div className="l">Nivel</div>
+            <div className="v">{String(level).padStart(2, "0")}</div>
+          </div>
         </div>
         <div className="hud-actions">
-          <Button variant="yellow" size="default" onClick={handlePause}>
-            {paused ? "▶ REANUDAR" : "⏸ PAUSA"}
-          </Button>
-          <Button variant="magenta" size="default" onClick={handleEnd}>
-            ⏹ FIN
-          </Button>
-          <Link href="/">
-            <Button variant="ghost" size="default">
-              ✕ SALIR
-            </Button>
+          <button className="btn yellow" onClick={() => setPaused((p) => !p)}>
+            {paused ? "REANUDAR" : "PAUSA"}
+          </button>
+          <button className="btn magenta" onClick={endGame}>
+            FIN
+          </button>
+          <Link href={`/juego/${game.id}`}>
+            <button className="btn ghost">SALIR</button>
           </Link>
         </div>
       </div>
@@ -154,64 +121,53 @@ export default function GamePlayer({ id }: { id: string }) {
       {/* CRT Screen */}
       <div className="crt">
         <div className="crt-screen">
-          <div className="crt-content">
-            <div className="game-arena">
-              {/* Grid floor */}
-              <div className="grid-floor" />
-
-              {/* Player ship */}
-              <div className="player-ship" />
-
-              {/* Enemies */}
-              <div className="enemy e1" />
-              <div className="enemy e2" />
-              <div className="enemy e3" />
-
-              {/* Pause overlay */}
-              {paused && (
+          <div className="game-arena">
+            <div className="grid-floor" />
+            <div className="enemy e1" />
+            <div className="enemy e2" />
+            <div className="enemy e3" />
+            <div className="player-ship" />
+          </div>
+          {paused && (
+            <div
+              className="crt-content"
+              style={{ background: "rgba(0,0,0,0.6)", zIndex: 5 }}
+            >
+              <div>
                 <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: "rgba(0,0,0,0.7)",
-                    zIndex: 10,
-                    fontFamily: "var(--pixel)",
-                    fontSize: 20,
-                    color: "var(--yellow)",
-                    textShadow: "0 0 12px rgba(245,255,0,0.7)",
-                    letterSpacing: "0.2em",
-                  }}
+                  className="pixel neon-yellow"
+                  style={{ fontSize: 22 }}
                 >
                   EN PAUSA
                 </div>
-              )}
+                <div
+                  className="mono"
+                  style={{
+                    fontSize: 11,
+                    color: "var(--ink-dim)",
+                    marginTop: 10,
+                    letterSpacing: "0.16em",
+                  }}
+                >
+                  PULSA REANUDAR PARA CONTINUAR
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
-
-        {/* CRT bottom bar */}
         <div className="crt-bottom">
-          <span className="led">ON AIR</span>
-          <span>ARCADE VAULT · {game.title}</span>
-          <span style={{ fontFamily: "var(--mono)", fontSize: 10 }}>
-            {new Date().toLocaleTimeString("es-ES", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-            })}
-          </span>
+          <span className="led">SEÑAL OK</span>
+          <span>{game.title} · CRT-83 · 60 HZ</span>
+          <span>CARGA · 1MB</span>
         </div>
       </div>
 
       {/* Game Over Modal */}
-      {gameOver && (
+      {over && (
         <GameOverModal
           score={score}
           gameId={game.id}
-          onRestart={handleRestart}
+          onRestart={restart}
           onExit={handleExit}
         />
       )}

@@ -2,158 +2,147 @@
 
 import { useState, useCallback, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import Button from "./Button";
-
-type Tab = "login" | "register";
 
 export default function AuthForm() {
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>("login");
-  const [username, setUsername] = useState("");
+  const [tab, setTab] = useState("in");
+  const [user, setUser] = useState("");
+  const [pass, setPass] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const saveAndRedirect = useCallback(
-    (name: string) => {
+  const submit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
       try {
         localStorage.setItem(
           "av_user",
-          JSON.stringify({ name, loggedAt: Date.now() }),
+          JSON.stringify({
+            name: (user || "PLAYER1").toUpperCase().slice(0, 10),
+            loggedAt: Date.now(),
+          }),
         );
       } catch {
         /* no disponible */
       }
       router.push("/");
     },
-    [router],
-  );
-
-  const handleSubmit = useCallback(
-    (e: FormEvent) => {
-      e.preventDefault();
-      const name = username.trim() || "JUGADOR";
-      saveAndRedirect(name);
-    },
-    [username, saveAndRedirect],
+    [user, router],
   );
 
   const handleGuest = useCallback(() => {
-    saveAndRedirect("INVITADO");
-  }, [saveAndRedirect]);
+    try {
+      localStorage.setItem("av_user", JSON.stringify(null));
+    } catch {
+      /* no disponible */
+    }
+    router.push("/");
+  }, [router]);
 
   return (
     <div className="av-auth-wrap fade-in">
       <div className="auth-card">
-        {/* Header */}
         <div className="auth-header">
           <div className="mark" />
           <h2 className="neon-cyan">ARCADE VAULT</h2>
+          <div
+            className="mono"
+            style={{
+              fontSize: 11,
+              color: "var(--ink-faint)",
+              letterSpacing: "0.16em",
+              marginTop: 6,
+            }}
+          >
+            ACCESO AL SISTEMA · v2.6
+          </div>
         </div>
 
-        {/* Tabs */}
         <div className="auth-tabs">
           <button
-            className={tab === "login" ? "on" : ""}
-            onClick={() => setTab("login")}
+            className={tab === "in" ? "on" : ""}
+            onClick={() => setTab("in")}
           >
             INICIAR SESIÓN
           </button>
           <button
-            className={tab === "register" ? "on" : ""}
-            onClick={() => setTab("register")}
+            className={tab === "up" ? "on" : ""}
+            onClick={() => setTab("up")}
           >
             CREAR CUENTA
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={submit}>
           <div className="field">
-            <label>USUARIO</label>
+            <label>Usuario</label>
             <input
-              type="text"
-              placeholder="Tu nombre de jugador"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+              placeholder="px_kai"
               autoComplete="username"
             />
           </div>
-
-          {tab === "register" && (
-            <div className="field">
-              <label>EMAIL</label>
+          {tab === "up" && (
+            <div className="field slide-in">
+              <label>Correo electrónico</label>
               <input
                 type="email"
-                placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="jugador@vault.gg"
                 autoComplete="email"
               />
             </div>
           )}
-
           <div className="field">
-            <label>CONTRASEÑA</label>
+            <label>Contraseña</label>
             <input
               type="password"
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete={tab === "login" ? "current-password" : "new-password"}
+              autoComplete={tab === "in" ? "current-password" : "new-password"}
             />
           </div>
 
-          <Button
-            variant="cyan"
-            size="lg"
+          <button
+            className="btn lg"
             type="submit"
             style={{ width: "100%", marginTop: 8 }}
-            pulse
           >
-            {tab === "login" ? "ENTRAR AL VAULT" : "CREAR CUENTA"}
-          </Button>
+            {tab === "in" ? "ENTRAR AL VAULT" : "CREAR Y JUGAR"}
+          </button>
         </form>
 
-        {/* Guest */}
-        <div style={{ marginTop: 12 }}>
-          <Button
-            variant="ghost"
-            size="default"
-            onClick={handleGuest}
-            style={{ width: "100%" }}
-          >
-            🎮 JUGAR COMO INVITADO
-          </Button>
-        </div>
+        <button
+          className="btn ghost"
+          style={{ width: "100%", marginTop: 10 }}
+          onClick={handleGuest}
+        >
+          JUGAR COMO INVITADO
+        </button>
 
-        {/* Divider */}
-        <div className="auth-divider">O CONECTA CON</div>
-
-        {/* Social buttons */}
+        <div className="auth-divider">O CONTINÚA CON</div>
         <div className="social">
-          <Button variant="ghost" size="default" disabled>
-            🔵 Google
-          </Button>
-          <Button variant="ghost" size="default" disabled>
-            🐙 GitHub
-          </Button>
+          <button className="btn ghost" type="button">
+            ◆ GOOGLE
+          </button>
+          <button className="btn ghost" type="button">
+            ▣ GITHUB
+          </button>
         </div>
 
-        {/* Terms */}
-        <p
+        <div
           style={{
             marginTop: 18,
-            fontFamily: "var(--mono)",
-            fontSize: 10,
-            color: "var(--ink-faint)",
             textAlign: "center",
-            letterSpacing: "0.04em",
-            lineHeight: 1.6,
+            fontSize: 11,
+            color: "var(--ink-faint)",
+            letterSpacing: "0.1em",
           }}
         >
-          Al entrar aceptas nuestros términos cósmicos y la política de
-          privacidad intergaláctica. Tus datos están seguros en el Vault.
-        </p>
+          AL ENTRAR ACEPTAS LOS TÉRMINOS DEL SALÓN ARCADE
+        </div>
       </div>
     </div>
   );

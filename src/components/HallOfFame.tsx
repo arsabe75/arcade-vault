@@ -2,131 +2,115 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { GAMES, seededScores, type ScoreRow } from "@/src/data/games";
-import Button from "./Button";
+import { GAMES, seededScores } from "@/src/data/games";
 import Podium from "./Podium";
 
-function formatScore(n: number): string {
-  return n.toLocaleString("en-US");
-}
-
-function topClass(rank: number): string {
-  if (rank === 1) return "top1";
-  if (rank === 2) return "top2";
-  if (rank === 3) return "top3";
-  return "";
-}
-
 export default function HallOfFame() {
-  const [gameIdx, setGameIdx] = useState(0);
-  const [yourBest, setYourBest] = useState<{
-    initials: string;
-    score: number;
-  } | null>(null);
+  const [tab, setTab] = useState(GAMES[0].id);
+  const [user, setUser] = useState<string | null>(null);
 
-  const game = GAMES[gameIdx] ?? GAMES[0];
-
-  // Load user's best score for this game from localStorage
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("av_scores");
-      if (raw) {
-        const all = JSON.parse(raw) as Record<
-          string,
-          { initials: string; score: number }[]
-        >;
-        const list = all[game.id];
-        if (list && list.length > 0) {
-          const best = list.reduce((a, b) => (b.score > a.score ? b : a));
-          setYourBest(best);
-          return;
-        }
+      const stored = localStorage.getItem("av_user");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed?.name) setUser(parsed.name.toUpperCase());
       }
     } catch {
       /* no disponible */
     }
-    setYourBest(null);
-  }, [game.id]);
+  }, []);
 
-  const allScores: ScoreRow[] = useMemo(() => {
-    return seededScores(game.best, 12);
-  }, [game.best]);
+  const game = GAMES.find((g) => g.id === tab);
+  const rows = useMemo(() => seededScores(tab.length * 23 + 7, 12), [tab]);
 
-  const top3 = allScores.slice(0, 3);
+  const youRank = user ? Math.floor(8 + (tab.length % 4)) : null;
+  const youScore = user && rows[5] ? rows[5].score - 2400 : null;
 
-  // Merge your best into the list if it's not already represented
-  const hasYourEntry =
-    yourBest &&
-    allScores.some(
-      (r) => r.name === yourBest.initials && r.score === yourBest.score,
-    );
+  if (!game) return null;
 
   return (
     <div className="av-hall fade-in">
-      {/* Header */}
       <div className="hall-head">
         <h1>SALÓN DE LA FAMA</h1>
-        <p className="mono">LAS MEJORES PUNTUACIONES DEL ARCADE VAULT</p>
+        <p className="pixel" style={{ fontSize: 10 }}>
+          LOS NOMBRES QUE NUNCA SE BORRAN DE LA PANTALLA
+        </p>
       </div>
 
-      {/* Game tabs */}
       <div className="hall-tabs">
-        {GAMES.map((g, i) => (
+        {GAMES.map((g) => (
           <button
             key={g.id}
-            className={`chip${i === gameIdx ? " active" : ""}`}
-            onClick={() => setGameIdx(i)}
+            className={"chip" + (tab === g.id ? " active" : "")}
+            onClick={() => setTab(g.id)}
           >
             {g.title}
           </button>
         ))}
       </div>
 
-      {/* Podium */}
-      <Podium top3={top3} />
+      <Podium top3={rows.slice(0, 3)} />
 
-      {/* Table */}
       <div className="hall-table">
         <div className="th">
-          <span>#</span>
-          <span>JUGADOR</span>
-          <span>PUNTUACIÓN</span>
-          <span>FECHA</span>
+          <div>RANGO</div>
+          <div>JUGADOR</div>
+          <div>PUNTUACIÓN</div>
+          <div>FECHA</div>
         </div>
-
-        {allScores.map((r, i) => (
+        {rows.map((r, i) => (
           <div
-            key={r.rank}
-            className={`tr ${topClass(r.rank)}`}
+            key={r.name + i}
+            className={
+              "tr" +
+              (i === 0 ? " top1" : i === 1 ? " top2" : i === 2 ? " top3" : "")
+            }
             style={{ animationDelay: `${i * 50}ms` }}
           >
-            <span className="rk">
-              {r.rank === 1 ? "🥇" : r.rank === 2 ? "🥈" : r.rank === 3 ? "🥉" : `#${r.rank}`}
-            </span>
-            <span className="pl">{r.name}</span>
-            <span className="sc">{formatScore(r.score)}</span>
-            <span className="dt">{r.date}</span>
+            <div className="rk">
+              #{String(r.rank).padStart(2, "0")}
+            </div>
+            <div className="pl">{r.name}</div>
+            <div className="sc">
+              {r.score.toLocaleString("es-ES")}
+            </div>
+            <div className="dt">{r.date}</div>
           </div>
         ))}
-
-        {/* Your best row */}
-        {yourBest && !hasYourEntry && (
+        {user && (
           <>
-            <div className="tr you-label">TU MEJOR MARCA</div>
-            <div className="tr you">
-              <span className="rk">—</span>
-              <span className="pl">{yourBest.initials}</span>
-              <span className="sc">{formatScore(yourBest.score)}</span>
-              <span className="dt">—</span>
+            <div className="tr you-label">
+              ▸ TU MEJOR MARCA EN {game.title}
+            </div>
+            <div
+              className="tr you"
+              style={{ animationDelay: `${rows.length * 50 + 50}ms` }}
+            >
+              <div className="rk" style={{ color: "var(--yellow)" }}>
+                #{String(youRank).padStart(2, "0")}
+              </div>
+              <div className="pl" style={{ color: "var(--yellow)" }}>
+                {user}
+              </div>
+              <div
+                className="sc"
+                style={{
+                  color: "var(--yellow)",
+                  textShadow: "0 0 6px rgba(245,255,0,0.5)",
+                }}
+              >
+                {(youScore ?? 9999).toLocaleString("es-ES")}
+              </div>
+              <div className="dt">11/05/2026</div>
             </div>
           </>
         )}
       </div>
 
-      {/* Back button */}
       <div style={{ textAlign: "center", marginTop: 32 }}>
         <Link href="/">
-          <Button variant="ghost">← VOLVER AL VAULT</Button>
+          <button className="btn lg">VOLVER A LA BIBLIOTECA</button>
         </Link>
       </div>
     </div>

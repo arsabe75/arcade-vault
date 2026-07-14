@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import Button from "./Button";
 
 interface GameOverModalProps {
   score: number;
@@ -16,66 +15,64 @@ export default function GameOverModal({
   onRestart,
   onExit,
 }: GameOverModalProps) {
-  const [initials, setInitials] = useState("");
+  const [name, setName] = useState("");
   const [saved, setSaved] = useState(false);
 
   const handleSave = useCallback(() => {
-    if (initials.trim().length === 0) return;
+    const trimmed = name.trim().toUpperCase().slice(0, 10);
+    if (trimmed.length === 0) return;
     try {
       const raw = localStorage.getItem("av_scores");
       const all: Record<string, { initials: string; score: number }[]> = raw
         ? JSON.parse(raw)
         : {};
       const list = all[gameId] ?? [];
-      list.push({ initials: initials.trim().toUpperCase().slice(0, 3), score });
+      list.push({ initials: trimmed, score });
       all[gameId] = list;
       localStorage.setItem("av_scores", JSON.stringify(all));
     } catch {
       /* localStorage no disponible */
     }
     setSaved(true);
-  }, [initials, score, gameId]);
+  }, [name, score, gameId]);
 
   return (
     <div className="modal-bd">
       <div className="modal">
-        <h2 className="flicker">GAME OVER</h2>
+        <h2>FIN DEL JUEGO</h2>
         <div className="final-label">PUNTUACIÓN FINAL</div>
-        <div className="final">{score.toLocaleString("en-US")}</div>
+        <div className="final">{score.toLocaleString("es-ES")}</div>
 
         {!saved ? (
           <>
             <div className="input-row">
               <input
-                type="text"
-                placeholder="TUS INICIALES..."
-                maxLength={3}
-                value={initials}
-                onChange={(e) => setInitials(e.target.value)}
+                value={name}
+                onChange={(e) =>
+                  setName(e.target.value.toUpperCase().slice(0, 10))
+                }
+                placeholder="TUS INICIALES"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSave();
                 }}
               />
-            </div>
-            <div className="actions">
-              <Button variant="magenta" onClick={handleSave}>
-                💾 GUARDAR PUNTUACIÓN
-              </Button>
+              <button className="btn yellow" onClick={handleSave}>
+                GUARDAR PUNTUACIÓN
+              </button>
             </div>
           </>
         ) : (
-          <>
-            <span className="toast-saved">PUNTUACIÓN GUARDADA</span>
-            <div className="actions" style={{ marginTop: 24 }}>
-              <Button variant="cyan" onClick={onRestart}>
-                🔄 JUGAR DE NUEVO
-              </Button>
-              <Button variant="ghost" onClick={onExit}>
-                🏠 VOLVER AL VAULT
-              </Button>
-            </div>
-          </>
+          <div className="toast-saved">▸ PUNTUACIÓN GUARDADA_</div>
         )}
+
+        <div className="actions">
+          <button className="btn" onClick={onRestart}>
+            JUGAR DE NUEVO
+          </button>
+          <button className="btn magenta" onClick={onExit}>
+            VOLVER AL VAULT
+          </button>
+        </div>
       </div>
     </div>
   );

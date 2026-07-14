@@ -3,22 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Button from "./Button";
-
-interface NavLink {
-  href: string;
-  label: string;
-}
-
-const LINKS: NavLink[] = [
-  { href: "/", label: "BIBLIOTECA" },
-  { href: "/salon", label: "SALÓN DE LA FAMA" },
-];
 
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [credits, setCredits] = useState(250);
   const [user, setUser] = useState<string | null>(null);
 
   useEffect(() => {
@@ -36,30 +24,41 @@ export default function Nav() {
   const close = useCallback(() => setOpen(false), []);
 
   const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
+    if (href === "/") return pathname === "/" || pathname.startsWith("/juego") || pathname.startsWith("/jugar");
     return pathname.startsWith(href);
   };
+
+  const handleSignOut = useCallback(() => {
+    try { localStorage.removeItem("av_user"); } catch { /* */ }
+    setUser(null);
+    close();
+  }, [close]);
 
   return (
     <>
       <nav className="av-nav">
         {/* Logo */}
         <Link href="/" className="logo" onClick={close}>
-          <span className="logo-mark" />
-          <span className="logo-text">ARCADE VAULT</span>
+          <div className="logo-mark" />
+          <div className="logo-text neon-cyan">
+            ARCADE <span className="neon-magenta">VAULT</span>
+          </div>
         </Link>
 
         {/* Desktop links */}
         <div className="links">
-          {LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={isActive(l.href) ? "active" : ""}
-            >
-              {l.label}
-            </Link>
-          ))}
+          <Link
+            href="/"
+            className={isActive("/") ? "active" : ""}
+          >
+            Biblioteca
+          </Link>
+          <Link
+            href="/salon"
+            className={isActive("/salon") ? "active" : ""}
+          >
+            Salón de la Fama
+          </Link>
         </div>
 
         <div className="spacer" />
@@ -67,86 +66,77 @@ export default function Nav() {
         {/* Credits */}
         <div className="coin-counter">
           <span className="coin" />
-          {credits} CRÉDITOS
+          <span>CRÉDITOS · 03</span>
         </div>
 
         {/* Auth button */}
-        <Link href="/auth" className="auth-btn">
-          <Button variant="cyan" size="default">
-            {user ? user.toUpperCase() : "INICIAR SESIÓN"}
-          </Button>
-        </Link>
+        {user ? (
+          <button className="btn ghost auth-btn" onClick={handleSignOut}>
+            {user} ▾
+          </button>
+        ) : (
+          <Link href="/auth" className="auth-btn">
+            <button className="btn">Iniciar Sesión</button>
+          </Link>
+        )}
 
         {/* Hamburger */}
         <button
-          className="hamburger"
-          onClick={() => setOpen((v) => !v)}
+          className="btn ghost hamburger"
+          onClick={() => setOpen(true)}
           aria-label="Menú"
-          style={{
-            fontFamily: "var(--pixel)",
-            fontSize: 14,
-            letterSpacing: "0.2em",
-            background: "transparent",
-            border: 0,
-            color: "var(--ink)",
-            cursor: "pointer",
-            padding: "8px 10px",
-          }}
         >
-          {open ? "✕" : "☰"}
+          ≡
         </button>
       </nav>
 
       {/* Mobile backdrop */}
       <div
-        className={`av-mobile-backdrop${open ? " open" : ""}`}
+        className={"av-mobile-backdrop" + (open ? " open" : "")}
         onClick={close}
-        aria-hidden
       />
 
       {/* Mobile panel */}
-      <div className={`av-mobile-panel${open ? " open" : ""}`} aria-hidden={!open}>
-        {LINKS.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            className={isActive(l.href) ? "active" : ""}
-            onClick={close}
-          >
-            {l.label}
-          </Link>
-        ))}
-        <div style={{ marginTop: 16 }}>
-          <Link href="/auth" onClick={close}>
-            <Button variant="magenta" size="default">
-              {user ? user.toUpperCase() : "ENTRAR AL VAULT"}
-            </Button>
-          </Link>
-        </div>
+      <aside className={"av-mobile-panel" + (open ? " open" : "")}>
         <div
+          className="pixel neon-cyan"
+          style={{ fontSize: 11, marginBottom: 16 }}
+        >
+          MENÚ
+        </div>
+        <Link
+          href="/"
+          className={isActive("/") ? "active" : ""}
+          onClick={close}
+        >
+          Biblioteca
+        </Link>
+        <Link
+          href="/salon"
+          className={isActive("/salon") ? "active" : ""}
+          onClick={close}
+        >
+          Salón de la Fama
+        </Link>
+        <Link
+          href="/auth"
+          className={isActive("/auth") ? "active" : ""}
+          onClick={close}
+        >
+          {user ? "Cuenta" : "Iniciar Sesión"}
+        </Link>
+        <div style={{ flex: 1 }} />
+        <div
+          className="pixel"
           style={{
-            marginTop: 20,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            fontFamily: "var(--pixel)",
             fontSize: 9,
-            color: "var(--yellow)",
+            color: "var(--ink-faint)",
+            letterSpacing: "0.16em",
           }}
         >
-          <span
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: "50%",
-              background:
-                "radial-gradient(circle at 35% 35%, #fff8b0, #f5ff00 60%, #b0b800)",
-              boxShadow: "0 0 8px var(--yellow)",
-            }}
-          />
-          {credits} CRÉDITOS
+          CRÉDITOS · 03
         </div>
-      </div>
+      </aside>
     </>
   );
 }
