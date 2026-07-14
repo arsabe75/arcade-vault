@@ -1,6 +1,6 @@
 # SPEC 01 — MVP visual de Arcade Vault
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** Ninguno
 > **Date:** 2026-07-13
 > **Objective:** Implementar todas las pantallas del Arcade Vault (Biblioteca, Detalle, Reproductor, Auth, Salón de la Fama) con su interactividad de UI y diseño visual retro-neón responsive, usando Next.js 16, React 19, Tailwind CSS v4 y TypeScript, sin lógica real de juegos ni autenticación.

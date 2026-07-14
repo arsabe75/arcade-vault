@@ -50,7 +50,7 @@ export default function GameDetail({ id }: { id: string }) {
     );
   }
 
-  const scores = seededScores(game.best);
+  const scores = seededScores(game.best, 10);
 
   const neonClass =
     game.color === "cyan"
