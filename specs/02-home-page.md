@@ -1,6 +1,6 @@
 # SPEC 02 — Home page con hero, features, y secciones de conversión
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 01
 > **Date:** 2026-07-15
 > **Objective:** Reemplazar la página principal (`/`) con la Home page completa del template (Hero, ¿Por qué Arcade Vault?, Juegos Disponibles, Stats, Actividad en Vivo, Precios, CTA Final) y mover la Biblioteca actual a la ruta `/biblioteca`.
