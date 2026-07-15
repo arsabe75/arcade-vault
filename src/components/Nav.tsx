@@ -24,7 +24,8 @@ export default function Nav() {
   const close = useCallback(() => setOpen(false), []);
 
   const isActive = (href: string) => {
-    if (href === "/") return pathname === "/" || pathname.startsWith("/juego") || pathname.startsWith("/jugar");
+    if (href === "/") return pathname === "/";
+    if (href === "/biblioteca") return pathname === "/biblioteca" || pathname.startsWith("/juego") || pathname.startsWith("/jugar");
     return pathname.startsWith(href);
   };
 
@@ -50,6 +51,12 @@ export default function Nav() {
           <Link
             href="/"
             className={isActive("/") ? "active" : ""}
+          >
+            Inicio
+          </Link>
+          <Link
+            href="/biblioteca"
+            className={isActive("/biblioteca") ? "active" : ""}
           >
             Biblioteca
           </Link>
@@ -107,6 +114,13 @@ export default function Nav() {
         <Link
           href="/"
           className={isActive("/") ? "active" : ""}
+          onClick={close}
+        >
+          Inicio
+        </Link>
+        <Link
+          href="/biblioteca"
+          className={isActive("/biblioteca") ? "active" : ""}
           onClick={close}
         >
           Biblioteca
