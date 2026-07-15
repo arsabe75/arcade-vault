@@ -3,6 +3,9 @@
 /screenshots/*
 !/screenshots/.gitkeep
 
+/.playwright-mcp/*
+!/.playwright-mcp/.gitkeep
+
 # dependencies
 /node_modules
 /.pnp
