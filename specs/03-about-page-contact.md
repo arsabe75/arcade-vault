@@ -1,6 +1,6 @@
 # SPEC 03 — About page y envío de correo con Resend
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 01, SPEC 02
 > **Date:** 2026-08-01
 > **Objective:** Implementar la página About (`/about`) con diseño retro-neón siguiendo el template de referencia, incluyendo formulario de contacto funcional que envía correos reales mediante Resend vía Server Action, con cooldown de 60 segundos entre envíos.

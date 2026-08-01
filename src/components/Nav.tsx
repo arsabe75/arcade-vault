@@ -66,6 +66,12 @@ export default function Nav() {
           >
             Salón de la Fama
           </Link>
+          <Link
+            href="/about"
+            className={isActive("/about") ? "active" : ""}
+          >
+            Acerca de
+          </Link>
         </div>
 
         <div className="spacer" />
@@ -131,6 +137,13 @@ export default function Nav() {
           onClick={close}
         >
           Salón de la Fama
+        </Link>
+        <Link
+          href="/about"
+          className={isActive("/about") ? "active" : ""}
+          onClick={close}
+        >
+          Acerca de
         </Link>
         <Link
           href="/auth"
