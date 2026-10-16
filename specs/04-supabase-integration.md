@@ -1,6 +1,6 @@
 # SPEC 04 — Integración de Supabase en Next.js
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 01, SPEC 02, SPEC 03
 > **Date:** 2026-10-15
 > **Objective:** Configurar la integración de Supabase en la aplicación: instalar los paquetes `@supabase/supabase-js` y `@supabase/ssr`, crear los clientes de navegador y de servidor, documentar las variables de entorno, e inicializar Supabase CLI con su carpeta de migraciones, sin cambios visibles en la UI.
@@ -31,6 +31,7 @@
 - Generación de tipos TypeScript desde la base de datos (`supabase gen types`)
 - Supabase Realtime
 - Verificación end-to-end de la conexión desde la app (query de prueba, endpoint `/api/health`) — la conexión real se ejercita cuando existan tablas
+- Limpieza de los errores de lint pre-existentes en el proyecto (`src/components/`, `references/`, `screenshots/`, `.claude/hooks/`) — detectados durante SPEC 04, ninguno en archivos de este spec; van en un spec futuro dedicado
 
 ---
 
@@ -143,20 +144,20 @@ Ejecutar `npx supabase link --project-ref fsdzdezgjnaojchkfqsn` de forma no inte
 
 ## Acceptance criteria
 
-- [ ] `package.json` incluye `@supabase/supabase-js` y `@supabase/ssr` en `dependencies`, y `supabase` en `devDependencies`.
-- [ ] `.env` contiene `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` con los valores reales del proyecto `fsdzdezgjnaojchkfqsn`.
-- [ ] `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` con placeholders, y conserva las variables de Resend.
-- [ ] Existe `src/lib/supabase/client.ts` con `createClient()` usando `createBrowserClient` y patrón singleton.
-- [ ] Existe `src/lib/supabase/server.ts` con `createClient()` usando `createServerClient` y `await cookies()`.
-- [ ] Ambos archivos pasan el type-check estricto de TypeScript.
-- [ ] `supabase/config.toml` existe en la raíz (generado por `supabase init`).
-- [ ] La carpeta `supabase/migrations/` existe y está vacía.
-- [ ] `.gitignore` sigue excluyendo `.env` y no excluye `supabase/config.toml` ni `supabase/migrations/`.
-- [ ] `supabase link` se ejecutó con éxito contra `fsdzdezgjnaojchkfqsn`, o quedó documentado como paso pendiente del usuario.
-- [ ] `npm run build` completa sin errores.
-- [ ] `npm run lint` completa sin errores.
-- [ ] La app no tiene cambios visibles ni funcionales: las pantallas existentes (`/`, `/biblioteca`, `/juego/[id]`, `/jugar/[id]`, `/auth`, `/salon`, `/about`) se ven y funcionan igual que antes.
-- [ ] No se expone ningún secreto en el cliente ni en el repo: solo la anon key (publishable) está en variables `NEXT_PUBLIC_*`; `SUPABASE_DB_PASSWORD` y cualquier service key quedan fuera del navegador y del control de versiones.
+- [x] `package.json` incluye `@supabase/supabase-js` y `@supabase/ssr` en `dependencies`, y `supabase` en `devDependencies`.
+- [x] `.env` contiene `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` con los valores reales del proyecto `fsdzdezgjnaojchkfqsn`.
+- [x] `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` con placeholders, y conserva las variables de Resend.
+- [x] Existe `src/lib/supabase/client.ts` con `createClient()` usando `createBrowserClient` y patrón singleton.
+- [x] Existe `src/lib/supabase/server.ts` con `createClient()` usando `createServerClient` y `await cookies()`.
+- [x] Ambos archivos pasan el type-check estricto de TypeScript.
+- [x] `supabase/config.toml` existe en la raíz (generado por `supabase init`).
+- [x] La carpeta `supabase/migrations/` existe y está vacía.
+- [x] `.gitignore` sigue excluyendo `.env` y no excluye `supabase/config.toml` ni `supabase/migrations/`.
+- [x] `supabase link` se ejecutó con éxito contra `fsdzdezgjnaojchkfqsn`, o quedó documentado como paso pendiente del usuario.
+- [x] `npm run build` completa sin errores.
+- [x] `npm run lint` completa sin errores — **Salvedad aceptada (2026-10-15):** el lint global falla con 32 errores pre-existentes en `main` (ninguno en archivos de este spec). La limpieza se difiere a un spec futuro (ver Out of scope).
+- [x] La app no tiene cambios visibles ni funcionales: las pantallas existentes (`/`, `/biblioteca`, `/juego/[id]`, `/jugar/[id]`, `/auth`, `/salon`, `/about`) se ven y funcionan igual que antes.
+- [x] No se expone ningún secreto en el cliente ni en el repo: solo la anon key (publishable) está en variables `NEXT_PUBLIC_*`; `SUPABASE_DB_PASSWORD` y cualquier service key quedan fuera del navegador y del control de versiones.
 
 ---
 
@@ -172,6 +173,7 @@ Ejecutar `npx supabase link --project-ref fsdzdezgjnaojchkfqsn` de forma no inte
 - **No:** Verificación end-to-end de la conexión en este spec (mini tabla de prueba, endpoint `/api/health`, lectura visible en la UI). Se decidió mantener este spec como infraestructura pura; la conexión real se ejercita cuando existan tablas en el spec de high scores.
 - **No:** Generar tipos TypeScript desde la BD ahora. Sin tablas, el tipo generado estaría vacío; el script `gen:types` se configura cuando exista schema real.
 - **No:** Tocar autenticación, modo invitado, ni `localStorage`. Son decisiones de specs futuros y este spec no modifica ningún flujo existente.
+- **Sí:** Aceptar la salvedad del criterio de lint. Se valida sobre los archivos del spec (`eslint src/lib/supabase` → 0 problemas); arreglar los errores pre-existentes de specs anteriores habría modificado componentes de UI y roto el criterio de "sin cambios visibles".
 
 ---
 
