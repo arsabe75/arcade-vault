@@ -13,7 +13,7 @@
 
 - Instalar `@supabase/supabase-js` y `@supabase/ssr` como dependencies
 - Instalar `supabase` (CLI) como devDependency de npm — no se instala globalmente
-- Obtener la URL del proyecto y la anon key del proyecto Supabase `fsdzdezgjnaojchkfqsn` (ya configurado en `.mcp.json`) y añadirlas a `.env` como `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Obtener la URL del proyecto y la anon key del proyecto Supabase `fsdzdezgjnaojchkfqsn` (ya configurado en `.mcp.json`) y añadirlas a `.env` como `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 - Documentar ambas variables en `.env.example`
 - Crear `src/lib/supabase/client.ts` — browser client con `createBrowserClient` y patrón singleton
 - Crear `src/lib/supabase/server.ts` — server client con `createServerClient` y `cookies()` (async en Next.js 16)
@@ -52,7 +52,7 @@ export function createClient() {
   if (!client) {
     client = createBrowserClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     );
   }
   return client;
@@ -71,7 +71,7 @@ export async function createClient() {
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
         getAll() {
@@ -89,7 +89,7 @@ export async function createClient() {
 ### Variables de entorno
 
 - `NEXT_PUBLIC_SUPABASE_URL` — URL del proyecto (se obtiene con el MCP de Supabase: `get_project_url`)
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — anon/publishable key (se obtiene con el MCP: `get_publishable_keys`)
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — anon/publishable key (se obtiene con el MCP: `get_publishable_keys`)
 - `SUPABASE_DB_PASSWORD` — ya existe en `.env`; la usa `supabase link` para autenticarse
 
 ---
@@ -114,7 +114,7 @@ El sistema sigue compilando; los paquetes aún no se usan.
 ```
 # Supabase project URL and anon key — dashboard → Project Settings → API
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_xxxxx
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxxxx
 ```
 
 ### Step 3 — Crear browser client `src/lib/supabase/client.ts`
@@ -144,8 +144,8 @@ Ejecutar `npx supabase link --project-ref fsdzdezgjnaojchkfqsn` de forma no inte
 ## Acceptance criteria
 
 - [ ] `package.json` incluye `@supabase/supabase-js` y `@supabase/ssr` en `dependencies`, y `supabase` en `devDependencies`.
-- [ ] `.env` contiene `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` con los valores reales del proyecto `fsdzdezgjnaojchkfqsn`.
-- [ ] `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` con placeholders, y conserva las variables de Resend.
+- [ ] `.env` contiene `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` con los valores reales del proyecto `fsdzdezgjnaojchkfqsn`.
+- [ ] `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` con placeholders, y conserva las variables de Resend.
 - [ ] Existe `src/lib/supabase/client.ts` con `createClient()` usando `createBrowserClient` y patrón singleton.
 - [ ] Existe `src/lib/supabase/server.ts` con `createClient()` usando `createServerClient` y `await cookies()`.
 - [ ] Ambos archivos pasan el type-check estricto de TypeScript.
