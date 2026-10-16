@@ -1,6 +1,6 @@
 # SPEC 05 — Juego Asteroids (ROCAS)
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 01, SPEC 02
 > **Date:** 2026-10-16
 > **Objective:** Portar el juego de Asteroids de `references/started-games/02-asteroids/` a la plataforma como el primer juego real en `/jugar/rocas`: motor portado a TypeScript puro (`src/games/asteroids/engine.ts`), componente React con canvas integrado en el `GamePlayer` existente (HUD, CRT y `GameOverModal` con guardado en `localStorage`).
@@ -136,25 +136,25 @@ Clase para escalar el canvas manteniendo 4:3 dentro de la arena, centrado. Verif
 
 ## Acceptance criteria
 
-- [ ] `/jugar/rocas` renderiza el juego real en canvas dentro del CRT, sin errores en la consola.
-- [ ] `←`/`→` rotan la nave y `↑` propulsa; `Espacio` dispara con cooldown de 0.2s.
-- [ ] Las teclas del juego no hacen scroll de página ni re-activan botones enfocados del HUD.
-- [ ] Un asteroide grande suma 20, mediano 50, pequeño 100, y el HUD de React refleja la puntuación real al instante.
-- [ ] Un asteroide grande se parte en 2 medianos; cada mediano en 2 pequeños; los pequeños desaparecen.
-- [ ] La nave tiene 3 vidas con 3 segundos de invencibilidad (parpadeo) al reaparecer; el HUD muestra las vidas reales.
-- [ ] Al eliminar todos los asteroides sube de nivel y aparecen `3 + nivel` asteroides nuevos; el HUD muestra el nivel real.
-- [ ] El powerup 3x aparece (15% por kill, garantizado al quinto kill), dura 5 segundos, dispara en abanico triple, y su temporizador se muestra en el HUD mientras está activo.
-- [ ] El botón PAUSA congela el juego y muestra el overlay "EN PAUSA"; REANUDAR continúa exactamente donde estaba.
-- [ ] El botón FIN abre el `GameOverModal` con la puntuación real del momento.
-- [ ] Al perder la tercera vida, el `GameOverModal` aparece con la puntuación final real, sin reinicio automático con Espacio.
-- [ ] "GUARDAR PUNTUACIÓN" escribe en `localStorage` la clave `av_scores` → `rocas` con `{ initials, score }` reales.
-- [ ] "JUGAR DE NUEVO" inicia una partida limpia (puntuación 0, 3 vidas, nivel 1, sin powerups activos).
-- [ ] "VOLVER AL VAULT" navega sin que el loop siga corriendo: no quedan listeners ni errores de consola.
-- [ ] `/jugar/bloque-buster` y el resto de juegos simulados se ven y funcionan igual que antes de este spec.
-- [ ] La ficha de `rocas` en `/biblioteca` y `/juego/rocas` muestra la descripción actualizada, sin mención a OVNIs.
-- [ ] El canvas se escala manteniendo proporción 4:3 y centrado en desktop y en móvil, sin deformación.
-- [ ] `npm run build` completa sin errores.
-- [ ] `npm run lint` no introduce errores nuevos en `src/games/`, `src/components/AsteroidsGame.tsx` ni `src/components/GamePlayer.tsx`.
+- [x] `/jugar/rocas` renderiza el juego real en canvas dentro del CRT, sin errores en la consola.
+- [x] `←`/`→` rotan la nave y `↑` propulsa; `Espacio` dispara con cooldown de 0.2s.
+- [x] Las teclas del juego no hacen scroll de página ni re-activan botones enfocados del HUD.
+- [x] Un asteroide grande suma 20, mediano 50, pequeño 100, y el HUD de React refleja la puntuación real al instante.
+- [x] Un asteroide grande se parte en 2 medianos; cada mediano en 2 pequeños; los pequeños desaparecen.
+- [x] La nave tiene 3 vidas con 3 segundos de invencibilidad (parpadeo) al reaparecer; el HUD muestra las vidas reales.
+- [x] Al eliminar todos los asteroides sube de nivel y aparecen `3 + nivel` asteroides nuevos; el HUD muestra el nivel real.
+- [x] El powerup 3x aparece (15% por kill, garantizado al quinto kill), dura 5 segundos, dispara en abanico triple, y su temporizador se muestra en el HUD mientras está activo.
+- [x] El botón PAUSA congela el juego y muestra el overlay "EN PAUSA"; REANUDAR continúa exactamente donde estaba.
+- [x] El botón FIN abre el `GameOverModal` con la puntuación real del momento.
+- [x] Al perder la tercera vida, el `GameOverModal` aparece con la puntuación final real, sin reinicio automático con Espacio.
+- [x] "GUARDAR PUNTUACIÓN" escribe en `localStorage` la clave `av_scores` → `rocas` con `{ initials, score }` reales.
+- [x] "JUGAR DE NUEVO" inicia una partida limpia (puntuación 0, 3 vidas, nivel 1, sin powerups activos).
+- [x] "VOLVER AL VAULT" navega sin que el loop siga corriendo: no quedan listeners ni errores de consola.
+- [x] `/jugar/bloque-buster` y el resto de juegos simulados se ven y funcionan igual que antes de este spec.
+- [x] La ficha de `rocas` en `/biblioteca` y `/juego/rocas` muestra la descripción actualizada, sin mención a OVNIs.
+- [x] El canvas se escala manteniendo proporción 4:3 y centrado en desktop y en móvil, sin deformación.
+- [x] `npm run build` completa sin errores.
+- [x] `npm run lint` no introduce errores nuevos en `src/games/`, `src/components/AsteroidsGame.tsx` ni `src/components/GamePlayer.tsx`.
 
 ---
 
