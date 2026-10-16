@@ -70,7 +70,7 @@ export const GAMES: Game[] = [
     id: "rocas",
     title: "ROCAS",
     short: "Pulveriza asteroides en gravedad cero.",
-    long: "Tu nave triangular flota en vacío absoluto. Dispara y rota para dividir rocas en fragmentos cada vez más pequeños. Cuidado con los OVNIs en el horizonte.",
+    long: "Tu nave triangular flota en gravedad cero. Rota, impulsa y dispara para partir cada roca en fragmentos cada vez más pequeños. Tres vidas, niveles progresivos y un powerup de triple disparo: ¿hasta qué nivel sobrevives?",
     cat: "SHOOTER",
     cover: "cover-rocas",
     color: "yellow",
@@ -122,10 +122,7 @@ import { PLAYERS } from "./players";
  * Deterministic seeded PRNG matching the reference template's algorithm.
  * LCG: s = (s * 9301 + 49297) % 233280
  */
-export function seededScores(
-  seed: number,
-  count: number = 12,
-): ScoreRow[] {
+export function seededScores(seed: number, count: number = 12): ScoreRow[] {
   let s = seed;
   const rand = () => (s = (s * 9301 + 49297) % 233280) / 233280;
   const used = new Set<string>();
@@ -148,8 +145,10 @@ export function seededScores(
       date: `${day}/${mon}/2026`,
     });
   }
-  return rows.sort((a, b) => b.score - a.score).map((r, i) => ({
-    ...r,
-    rank: i + 1,
-  }));
+  return rows
+    .sort((a, b) => b.score - a.score)
+    .map((r, i) => ({
+      ...r,
+      rank: i + 1,
+    }));
 }
