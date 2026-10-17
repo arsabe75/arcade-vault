@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import type { Game } from "@/src/data/games";
 import Button from "./Button";
 
-export default function GameCard({ game }: { game: Game }) {
+export default function GameCard({
+  game,
+  best,
+}: {
+  game: Game;
+  best?: number;
+}) {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -61,9 +67,13 @@ export default function GameCard({ game }: { game: Game }) {
         <div className="row">
           <div className="score-badge">
             <span>MEJOR PUNTUACIÓN</span>
-            <b>{game.best.toLocaleString("es-ES")}</b>
+            <b>{best !== undefined ? best.toLocaleString("es-ES") : "—"}</b>
           </div>
-          <Button variant={btnVariant as "cyan" | "magenta" | "yellow"} size="default" onClick={handlePlay}>
+          <Button
+            variant={btnVariant as "cyan" | "magenta" | "yellow"}
+            size="default"
+            onClick={handlePlay}
+          >
             JUGAR
           </Button>
         </div>
