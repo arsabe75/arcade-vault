@@ -231,7 +231,7 @@ Eliminar `seededScores`, `ScoreRow`, el import de `PLAYERS` y el campo `best` de
 - [ ] `pg_policies` muestra exactamente 3 políticas: SELECT público en `games`, SELECT público en `scores`, INSERT en `scores` — y ninguna de UPDATE/DELETE para anon.
 - [ ] Al pulsar "GUARDAR PUNTUACIÓN" en el `GameOverModal` de `/jugar/rocas`, la fila se inserta en `scores` (verificable con SQL) y el modal muestra "▸ PUNTUACIÓN GUARDADA_".
 - [ ] Una marca guardada en un navegador aparece en otro navegador/dispositivo (persistencia en la nube, no localStorage).
-- [ ] Si el INSERT falla (p. ej. sin red), el modal muestra "NO SE PUDO GUARDAR — REINTENTAR" y permite reintentar; "JUGAR DE NUEVO" y "VOLVER AL VAULT" siguen funcionando.
+- [ ] Si el INSERT falla (p. ej. sin red), el modal muestra "NO SE PUDO GUARDAR — REINTENTA" y permite reintentar; "JUGAR DE NUEVO" y "VOLVER AL VAULT" siguen funcionando.
 - [ ] `GameOverModal` ya no escribe en `localStorage` (grep de `av_scores` sin resultados en `src/`).
 - [ ] `/juego/rocas` muestra el leaderboard real (top 10) ordenado por puntuación descendente, con iniciales y fechas `DD/MM/YYYY` formateadas en `es-ES`.
 - [ ] `/juego/bloque-buster` (sin marcas) muestra "AÚN NO HAY MARCAS — ¡SÉ EL PRIMERO!" en lugar de filas falsas.
