@@ -65,10 +65,18 @@ export async function insertScore(
   if (error) throw error;
 }
 
+interface TopScoresState {
+  gameId: string;
+  rows: ScoreEntry[] | null;
+  error: boolean;
+}
+
 export function useTopScores(gameId: string, limit = 10) {
-  const [rows, setRows] = useState<ScoreEntry[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [state, setState] = useState<TopScoresState>({
+    gameId: "",
+    rows: null,
+    error: false,
+  });
   const [attempt, setAttempt] = useState(0);
 
   const reload = () => setAttempt((a) => a + 1);
@@ -76,20 +84,14 @@ export function useTopScores(gameId: string, limit = 10) {
   useEffect(() => {
     let stale = false;
 
-    setRows(null); // null = still loading
-    setLoading(true);
-    setError(false);
-
     fetchTopScores(gameId, limit)
-      .then((data) => {
+      .then((rows) => {
         if (stale) return; // ignore stale responses on fast tab switches
-        setRows(data);
-        setLoading(false);
+        setState({ gameId, rows, error: false });
       })
       .catch(() => {
         if (stale) return;
-        setError(true);
-        setLoading(false);
+        setState({ gameId, rows: null, error: true });
       });
 
     return () => {
@@ -97,13 +99,26 @@ export function useTopScores(gameId: string, limit = 10) {
     };
   }, [gameId, limit, attempt]);
 
+  // Derived: loading while the stored result doesn't match the requested game.
+  const loading = state.gameId !== gameId;
+  const rows = loading ? null : state.rows;
+  const error = !loading && state.error;
+
   return { rows, loading, error, reload };
 }
 
+interface AllBestsState {
+  bests: Record<string, number> | null;
+  error: boolean;
+  loaded: boolean;
+}
+
 export function useAllBests() {
-  const [bests, setBests] = useState<Record<string, number> | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [state, setState] = useState<AllBestsState>({
+    bests: null,
+    error: false,
+    loaded: false,
+  });
   const [attempt, setAttempt] = useState(0);
 
   const reload = () => setAttempt((a) => a + 1);
@@ -111,25 +126,24 @@ export function useAllBests() {
   useEffect(() => {
     let stale = false;
 
-    setLoading(true);
-    setError(false);
-
     fetchAllBests()
-      .then((data) => {
+      .then((bests) => {
         if (stale) return;
-        setBests(data);
-        setLoading(false);
+        setState({ bests, error: false, loaded: true });
       })
       .catch(() => {
         if (stale) return;
-        setError(true);
-        setLoading(false);
+        setState({ bests: null, error: true, loaded: true });
       });
 
     return () => {
       stale = true;
     };
   }, [attempt]);
+
+  const loading = !state.loaded;
+  const bests = state.bests;
+  const error = !loading && state.error;
 
   return { bests, loading, error, reload };
 }

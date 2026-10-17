@@ -1,6 +1,6 @@
 # SPEC 06 — Leaderboard en la nube y tabla de juegos
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 01, SPEC 02, SPEC 04, SPEC 05
 > **Date:** 2026-10-17
 > **Objective:** Crear el leaderboard real en la nube con Supabase: tablas `games` (catálogo) y `scores` (marcas) con RLS, guardado real desde el `GameOverModal`, y leaderboards reales en el Salón de la Fama, la ficha de juego y las tarjetas de la biblioteca, eliminando los datos falsos generados (`seededScores`).
@@ -225,24 +225,24 @@ Eliminar `seededScores`, `ScoreRow`, el import de `PLAYERS` y el campo `best` de
 
 ## Acceptance criteria
 
-- [ ] Existe `supabase/migrations/20261017000000_create_games_and_scores.sql` y está aplicada en el proyecto remoto `fsdzdezgjnaojchkfqsn`.
-- [ ] La tabla `games` existe con RLS habilitado y las 8 filas sembradas con los `id`/`title` de `GAMES`.
-- [ ] La tabla `scores` existe con RLS habilitado, FK a `games`, checks de `initials` (1–10 caracteres) y `score >= 0`, columna `user_id` nullable e índice en `(game_id, score desc)`.
-- [ ] `pg_policies` muestra exactamente 3 políticas: SELECT público en `games`, SELECT público en `scores`, INSERT en `scores` — y ninguna de UPDATE/DELETE para anon.
-- [ ] Al pulsar "GUARDAR PUNTUACIÓN" en el `GameOverModal` de `/jugar/rocas`, la fila se inserta en `scores` (verificable con SQL) y el modal muestra "▸ PUNTUACIÓN GUARDADA_".
-- [ ] Una marca guardada en un navegador aparece en otro navegador/dispositivo (persistencia en la nube, no localStorage).
-- [ ] Si el INSERT falla (p. ej. sin red), el modal muestra "NO SE PUDO GUARDAR — REINTENTA" y permite reintentar; "JUGAR DE NUEVO" y "VOLVER AL VAULT" siguen funcionando.
-- [ ] `GameOverModal` ya no escribe en `localStorage` (grep de `av_scores` sin resultados en `src/`).
-- [ ] `/juego/rocas` muestra el leaderboard real (top 10) ordenado por puntuación descendente, con iniciales y fechas `DD/MM/YYYY` formateadas en `es-ES`.
-- [ ] `/juego/bloque-buster` (sin marcas) muestra "AÚN NO HAY MARCAS — ¡SÉ EL PRIMERO!" en lugar de filas falsas.
-- [ ] "Mejor global" de la ficha coincide con la primera fila del leaderboard real y muestra "—" cuando no hay marcas.
-- [ ] La tarjeta de cada juego en la biblioteca muestra la mejor puntuación real; "—" si el juego no tiene marcas.
-- [ ] `/salon` muestra datos reales por pestaña (top 10), con estados de carga, error y vacío, y sin la fila falsa "TU MEJOR MARCA".
-- [ ] El Podium del Salón solo aparece cuando hay al menos 3 marcas.
-- [ ] No queda ninguna referencia a `seededScores`, `PLAYERS`, `av_scores` ni `game.best` en `src/`; el archivo `src/data/players.ts` no existe.
-- [ ] `npm run build` completa sin errores.
-- [ ] `npm run lint` no introduce errores nuevos en los archivos de este spec (salvedad de SPEC 04: los errores pre-existentes de `main` siguen fuera de alcance).
-- [ ] Las pantallas no tocadas (`/`, `/biblioteca` salvo la insignia ahora real, `/jugar/[id]` en gameplay, `/auth`, `/about`) se ven y funcionan igual que antes.
+- [x] Existe `supabase/migrations/20261017000000_create_games_and_scores.sql` y está aplicada en el proyecto remoto `fsdzdezgjnaojchkfqsn`.
+- [x] La tabla `games` existe con RLS habilitado y las 8 filas sembradas con los `id`/`title` de `GAMES`.
+- [x] La tabla `scores` existe con RLS habilitado, FK a `games`, checks de `initials` (1–10 caracteres) y `score >= 0`, columna `user_id` nullable e índice en `(game_id, score desc)`.
+- [x] `pg_policies` muestra exactamente 3 políticas: SELECT público en `games`, SELECT público en `scores`, INSERT en `scores` — y ninguna de UPDATE/DELETE para anon.
+- [x] Al pulsar "GUARDAR PUNTUACIÓN" en el `GameOverModal` de `/jugar/rocas`, la fila se inserta en `scores` (verificable con SQL) y el modal muestra "▸ PUNTUACIÓN GUARDADA_".
+- [x] Una marca guardada en un navegador aparece en otro navegador/dispositivo (persistencia en la nube, no localStorage).
+- [x] Si el INSERT falla (p. ej. sin red), el modal muestra "NO SE PUDO GUARDAR — REINTENTA" y permite reintentar; "JUGAR DE NUEVO" y "VOLVER AL VAULT" siguen funcionando.
+- [x] `GameOverModal` ya no escribe en `localStorage` (grep de `av_scores` sin resultados en `src/`).
+- [x] `/juego/rocas` muestra el leaderboard real (top 10) ordenado por puntuación descendente, con iniciales y fechas `DD/MM/YYYY` formateadas en `es-ES`.
+- [x] `/juego/bloque-buster` (sin marcas) muestra "AÚN NO HAY MARCAS — ¡SÉ EL PRIMERO!" en lugar de filas falsas.
+- [x] "Mejor global" de la ficha coincide con la primera fila del leaderboard real y muestra "—" cuando no hay marcas.
+- [x] La tarjeta de cada juego en la biblioteca muestra la mejor puntuación real; "—" si el juego no tiene marcas.
+- [x] `/salon` muestra datos reales por pestaña (top 10), con estados de carga, error y vacío, y sin la fila falsa "TU MEJOR MARCA".
+- [x] El Podium del Salón solo aparece cuando hay al menos 3 marcas.
+- [x] No queda ninguna referencia a `seededScores`, `PLAYERS`, `av_scores` ni `game.best` en `src/`; el archivo `src/data/players.ts` no existe.
+- [x] `npm run build` completa sin errores.
+- [x] `npm run lint` no introduce errores nuevos en los archivos de este spec (salvedad de SPEC 04: los errores pre-existentes de `main` siguen fuera de alcance).
+- [x] Las pantallas no tocadas (`/`, `/biblioteca` salvo la insignia ahora real, `/jugar/[id]` en gameplay, `/auth`, `/about`) se ven y funcionan igual que antes.
 
 ---
 
