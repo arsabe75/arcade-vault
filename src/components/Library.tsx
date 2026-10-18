@@ -2,11 +2,13 @@
 
 import { useState, useMemo } from "react";
 import { GAMES, CATS } from "@/src/data/games";
+import { useAllBests } from "@/src/lib/supabase/scores";
 import GameCard from "./GameCard";
 
 export default function Library() {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("TODOS");
+  const { bests } = useAllBests();
 
   const filtered = useMemo(() => {
     return GAMES.filter(
@@ -52,7 +54,7 @@ export default function Library() {
       {/* Game Grid / Empty state */}
       <div className="av-grid">
         {filtered.map((g) => (
-          <GameCard key={g.id} game={g} />
+          <GameCard key={g.id} game={g} best={bests?.[g.id]} />
         ))}
         {filtered.length === 0 && (
           <div

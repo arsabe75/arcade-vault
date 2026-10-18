@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 
+import { insertScore } from "@/src/lib/supabase/scores";
+
 interface GameOverModalProps {
   score: number;
   gameId: string;
@@ -17,24 +19,22 @@ export default function GameOverModal({
 }: GameOverModalProps) {
   const [name, setName] = useState("");
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     const trimmed = name.trim().toUpperCase().slice(0, 10);
-    if (trimmed.length === 0) return;
+    if (trimmed.length === 0 || saving) return;
+    setSaving(true);
+    setError(false);
     try {
-      const raw = localStorage.getItem("av_scores");
-      const all: Record<string, { initials: string; score: number }[]> = raw
-        ? JSON.parse(raw)
-        : {};
-      const list = all[gameId] ?? [];
-      list.push({ initials: trimmed, score });
-      all[gameId] = list;
-      localStorage.setItem("av_scores", JSON.stringify(all));
+      await insertScore(gameId, trimmed, score);
+      setSaved(true);
     } catch {
-      /* localStorage no disponible */
+      setError(true);
+      setSaving(false); // permite reintentar con el mismo input
     }
-    setSaved(true);
-  }, [name, score, gameId]);
+  }, [name, score, gameId, saving]);
 
   return (
     <div className="modal-bd">
@@ -45,6 +45,9 @@ export default function GameOverModal({
 
         {!saved ? (
           <>
+            {error && (
+              <div className="save-error">NO SE PUDO GUARDAR — REINTENTA</div>
+            )}
             <div className="input-row">
               <input
                 value={name}
@@ -56,8 +59,12 @@ export default function GameOverModal({
                   if (e.key === "Enter") handleSave();
                 }}
               />
-              <button className="btn yellow" onClick={handleSave}>
-                GUARDAR PUNTUACIÓN
+              <button
+                className="btn yellow"
+                onClick={handleSave}
+                disabled={saving}
+              >
+                {saving ? "GUARDANDO…" : "GUARDAR PUNTUACIÓN"}
               </button>
             </div>
           </>
