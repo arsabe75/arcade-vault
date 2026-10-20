@@ -1,16 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { TetrisEngine, type EngineCallbacks } from "@/src/games/caida/engine";
-
-// Props provisionales idénticas al GameEngineProps del registry de la plataforma.
-// El registry aún no existe (se crea en la Fase 5): entonces este componente
-// pasará a tiparse con `import type { GameEngineProps } from "@/src/games/registry"`
-// y esta interfaz local se elimina, igual que hará AsteroidsGame (SPEC 05 → Caso A).
-interface TetrisGameProps extends EngineCallbacks {
-  paused: boolean;
-  onLines?(lines: number): void; // solo juegos con líneas
-}
+import { TetrisEngine } from "@/src/games/caida/engine";
+import type { GameEngineProps } from "@/src/games/registry";
 
 // Wrapper React del motor: el canvas se monta una vez, el motor se instancia
 // en useEffect con cleanup, y la pausa llega como prop. Los callbacks se
@@ -23,7 +15,7 @@ export default function TetrisGame({
   onTripleShot,
   onGameOver,
   onLines,
-}: TetrisGameProps) {
+}: GameEngineProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<TetrisEngine | null>(null);
 

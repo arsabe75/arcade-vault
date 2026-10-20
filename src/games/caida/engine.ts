@@ -15,6 +15,8 @@
 //   8. `preventDefault()` en las teclas del juego durante `playing`.
 //   9. `dt` en segundos con cap a 0.05 s (el original acumulaba ms sin cap).
 
+import type { EngineCallbacks } from "@/src/games/registry";
+
 export const W = 800;
 export const H = 600;
 
@@ -187,18 +189,6 @@ class Piece {
 
 // ── Motor ────────────────────────────────────────────────────────────────────────
 export type GameState = "playing" | "gameover";
-
-// Contrato idéntico al del registry de la plataforma. El registry aún no existe
-// (se crea en la Fase 5): entonces este motor pasará a importar el tipo desde
-// `@/src/games/registry` y esta interfaz local se elimina, igual que hizo
-// `asteroids/engine.ts` (SPEC 05 → Caso A).
-export interface EngineCallbacks {
-  onScore(score: number): void;
-  onLives(lives: number): void;
-  onLevel(level: number): void;
-  onTripleShot(secondsLeft: number | null): void; // null cuando el powerup expira
-  onGameOver(score: number): void;
-}
 
 // Teclas del juego: reciben preventDefault durante la partida
 // (no hacen scroll ni re-activan botones enfocados del HUD).
