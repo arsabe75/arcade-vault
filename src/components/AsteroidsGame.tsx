@@ -1,14 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-  AsteroidsEngine,
-  type EngineCallbacks,
-} from "@/src/games/asteroids/engine";
-
-interface AsteroidsGameProps extends EngineCallbacks {
-  paused: boolean;
-}
+import { AsteroidsEngine } from "@/src/games/asteroids/engine";
+import type { GameEngineProps } from "@/src/games/registry";
 
 export default function AsteroidsGame({
   paused,
@@ -17,7 +11,7 @@ export default function AsteroidsGame({
   onLevel,
   onTripleShot,
   onGameOver,
-}: AsteroidsGameProps) {
+}: GameEngineProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<AsteroidsEngine | null>(null);
 

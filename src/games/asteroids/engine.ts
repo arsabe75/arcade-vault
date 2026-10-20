@@ -10,6 +10,8 @@
 //   3. Paleta neón de Arcade Vault: nave cyan, asteroides amarillos, balas magenta.
 //   4. `preventDefault()` en las teclas del juego durante `playing`/`dead`.
 
+import type { EngineCallbacks } from "@/src/games/registry";
+
 export const W = 800;
 export const H = 600;
 
@@ -336,14 +338,6 @@ export class Particle {
 
 // ── Motor ───────────────────────────────────────────────────────────────────────
 export type GameState = "playing" | "dead" | "gameover";
-
-export interface EngineCallbacks {
-  onScore(score: number): void;
-  onLives(lives: number): void;
-  onLevel(level: number): void;
-  onTripleShot(secondsLeft: number | null): void; // null cuando el powerup expira
-  onGameOver(score: number): void;
-}
 
 const GAME_KEYS: readonly string[] = [
   "ArrowLeft",

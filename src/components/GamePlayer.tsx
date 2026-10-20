@@ -1,25 +1,80 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GAMES } from "@/src/data/games";
-import AsteroidsGame from "./AsteroidsGame";
+import {
+  getGameEngine,
+  type HudStat,
+  type HudStatKey,
+} from "@/src/games/registry";
 import GameOverModal from "./GameOverModal";
+
+// HUD de los juegos simulados: replica la configuración actual para que el
+// loop genérico del HUD pinte la simulación igual que antes del registry.
+const SIM_HUD: HudStat[] = [
+  { key: "score", label: "Puntuación", initial: 0 },
+  { key: "lives", label: "Vidas", initial: 3 },
+  { key: "level", label: "Nivel", initial: 1 },
+];
+
+// Render del valor de cada stat (formato de número, corazones, padStart…).
+// La config del registry solo dice QUÉ se muestra; el CÓMO vive aquí.
+function renderStatValue(key: HudStatKey, value: number | null): string {
+  if (value === null) return "—";
+  switch (key) {
+    case "score":
+      return value.toLocaleString("es-ES");
+    case "lives":
+      return "♥ ".repeat(value).trim() || "—";
+    case "level":
+      return String(value).padStart(2, "0");
+    case "lines":
+      return String(value);
+    case "triple":
+      return `3x ${value.toFixed(1)}s`;
+  }
+}
 
 export default function GamePlayer({ id }: { id: string }) {
   const router = useRouter();
   const game = GAMES.find((g) => g.id === id);
-  const isRocas = game?.id === "rocas";
+  const entry = game ? getGameEngine(game.id) : undefined;
+  const EngineComponent = entry?.component; // mayúscula: obligatorio para JSX
+  const hud = entry?.hud ?? SIM_HUD;
 
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [level, setLevel] = useState(1);
+  const [lines, setLines] = useState(0);
   const [paused, setPaused] = useState(false);
   const [over, setOver] = useState(false);
   const [playerName, setPlayerName] = useState("INVITADO");
   const [triple, setTriple] = useState<number | null>(null);
   const [restartKey, setRestartKey] = useState(0);
+
+  // Setters estables de React → mapa tipado por clave de stat.
+  // El mapa solo se usa en restart() con `initial` (número); los setters
+  // numéricos descartan el null del tipo común con `?? 0`.
+  const statSetters = useMemo<Record<HudStatKey, (v: number | null) => void>>(
+    () => ({
+      score: (v) => setScore(v ?? 0),
+      lives: (v) => setLives(v ?? 0),
+      level: (v) => setLevel(v ?? 0),
+      lines: (v) => setLines(v ?? 0),
+      triple: setTriple,
+    }),
+    [],
+  );
+
+  const statValues: Record<HudStatKey, number | null> = {
+    score,
+    lives,
+    level,
+    lines,
+    triple,
+  };
 
   // Load player name from localStorage
   useEffect(() => {
@@ -34,21 +89,21 @@ export default function GamePlayer({ id }: { id: string }) {
     }
   }, []);
 
-  // Score simulation (solo juegos simulados — rocas usa el motor real)
+  // Score simulation (solo juegos sin motor real)
   useEffect(() => {
-    if (isRocas || over || paused) return;
+    if (entry || over || paused) return;
     const t = setInterval(
       () => setScore((s) => s + Math.floor(10 + Math.random() * 90)),
       220,
     );
     return () => clearInterval(t);
-  }, [isRocas, over, paused]);
+  }, [entry, over, paused]);
 
   // Level up (solo juegos simulados)
   useEffect(() => {
-    if (isRocas) return;
+    if (entry) return;
     if (score > 0 && score % 2500 < 100) setLevel((l) => l + 1);
-  }, [isRocas, score]);
+  }, [entry, score]);
 
   const endGame = useCallback(() => setOver(true), []);
 
@@ -59,14 +114,12 @@ export default function GamePlayer({ id }: { id: string }) {
   }, []);
 
   const restart = useCallback(() => {
-    setScore(0);
-    setLives(3);
-    setLevel(1);
+    for (const s of hud) statSetters[s.key](s.initial);
+    setTriple(null);
     setPaused(false);
     setOver(false);
-    setTriple(null);
     setRestartKey((k) => k + 1); // remonta el motor limpio
-  }, []);
+  }, [hud, statSetters]);
 
   const handleExit = useCallback(() => {
     router.push("/");
@@ -104,24 +157,16 @@ export default function GamePlayer({ id }: { id: string }) {
               {playerName}
             </div>
           </div>
-          <div className="hud-stat">
-            <div className="l">Puntuación</div>
-            <div className="v">{score.toLocaleString("es-ES")}</div>
-          </div>
-          <div className="hud-stat lives">
-            <div className="l">Vidas</div>
-            <div className="v">{"♥ ".repeat(lives).trim() || "—"}</div>
-          </div>
-          <div className="hud-stat level">
-            <div className="l">Nivel</div>
-            <div className="v">{String(level).padStart(2, "0")}</div>
-          </div>
-          {isRocas && triple !== null && (
-            <div className="hud-stat">
-              <div className="l">PowerUp</div>
-              <div className="v">3x {triple.toFixed(1)}s</div>
-            </div>
-          )}
+          {hud.map((s) => {
+            const value = statValues[s.key];
+            if (s.conditional && value === null) return null;
+            return (
+              <div className={`hud-stat ${s.key}`} key={s.key}>
+                <div className="l">{s.label}</div>
+                <div className="v">{renderStatValue(s.key, value)}</div>
+              </div>
+            );
+          })}
         </div>
         <div className="hud-actions">
           <button className="btn yellow" onClick={() => setPaused((p) => !p)}>
@@ -140,20 +185,20 @@ export default function GamePlayer({ id }: { id: string }) {
       <div className="crt">
         <div className="crt-screen">
           <div className="game-arena">
-            {isRocas ? (
+            {entry && EngineComponent && !over && (
               // El motor real se desmonta al terminar (el modal cubre la arena)
-              !over && (
-                <AsteroidsGame
-                  key={restartKey}
-                  paused={paused}
-                  onScore={setScore}
-                  onLives={setLives}
-                  onLevel={setLevel}
-                  onTripleShot={setTriple}
-                  onGameOver={handleGameOver}
-                />
-              )
-            ) : (
+              <EngineComponent
+                key={restartKey}
+                paused={paused}
+                onScore={setScore}
+                onLives={setLives}
+                onLevel={setLevel}
+                onTripleShot={setTriple}
+                onGameOver={handleGameOver}
+                onLines={setLines}
+              />
+            )}
+            {!entry && (
               <>
                 <div className="grid-floor" />
                 <div className="enemy e1" />
