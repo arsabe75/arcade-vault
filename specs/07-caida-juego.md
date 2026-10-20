@@ -1,6 +1,6 @@
 # SPEC 07 — Juego Tetris (CAÍDA)
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 05, SPEC 06
 > **Date:** 2026-10-20
 > **Objective:** Integrar CAÍDA (Tetris) en la plataforma como segundo juego real en `/jugar/caida`: motor portado de `references/started-games/03-tetris/game.js` a TypeScript puro (`src/games/caida/engine.ts`), wrapper `TetrisGame.tsx`, estreno del registry de motores (`src/games/registry.ts`) con refactor de `GamePlayer`, entrada de catálogo reutilizada (placeholder `caida` con portada `cover-tetro`) y leaderboard en la nube (fila `caida` en `public.games`).
@@ -153,22 +153,22 @@ export function getGameEngine(id: string): GameEngineEntry | undefined;
 
 ## Acceptance criteria
 
-- [ ] `/jugar/caida` renderiza el juego real en canvas dentro del CRT, sin errores en la consola.
-- [ ] El tablero 10×20 se dibuja centrado en el canvas 800×600 con la grilla neón y la pieza siguiente en el lateral derecho.
-- [ ] `←`/`→` mueven la pieza, `↓` hace soft drop (+1 por fila), `↑` o `X` rotan con wall kicks, `Espacio` hace hard drop (+2 por celda); el HUD de React refleja la puntuación real al instante.
-- [ ] Las teclas del juego no hacen scroll de página ni re-activan botones enfocados del HUD.
-- [ ] Eliminar 1/2/3/4 líneas suma `100/300/500/800 × nivel` respectivamente; las líneas desaparecen del tablero y el HUD muestra el contador real.
-- [ ] El nivel sube cada 10 líneas y la caída se acelera según `max(100, 1000 − (nivel − 1) × 90)` ms; el HUD muestra el nivel real.
-- [ ] La pieza fantasma se dibuja con alpha 0.2 en la posición de aterrizaje y la pieza siguiente coincide con la que aparece después.
-- [ ] Cuando la pieza nueva no cabe al aparecer, el `GameOverModal` aparece con la puntuación final real, sin reinicio con tecla.
-- [ ] El botón PAUSA congela el juego y muestra el overlay "EN PAUSA"; REANUDAR continúa exactamente donde estaba.
-- [ ] El botón FIN abre el `GameOverModal` con la puntuación real del momento.
-- [ ] "GUARDAR PUNTUACIÓN" inserta la fila en `scores` con `game_id = 'caida'` (verificable con SQL) y muestra "▸ PUNTUACIÓN GUARDADA_".
-- [ ] "JUGAR DE NUEVO" inicia una partida limpia (puntuación 0, líneas 0, nivel 1, tablero vacío); "VOLVER AL VAULT" navega sin que el loop siga corriendo.
-- [ ] `/juego/caida` muestra la marca guardada en el leaderboard y el "Mejor global" real; `/salon` la muestra en la pestaña CAÍDA; la tarjeta de `/` y `/biblioteca` muestra "MEJOR PUNTUACIÓN" con el valor.
-- [ ] `/jugar/rocas` se ve y juega igual que antes del refactor del registry; `/jugar/bloque-buster` y el resto de simulados se ven y funcionan igual que antes.
-- [ ] `npm run build` completa sin errores.
-- [ ] `npm run lint` no introduce errores nuevos en los archivos de este spec.
+- [x] `/jugar/caida` renderiza el juego real en canvas dentro del CRT, sin errores en la consola.
+- [x] El tablero 10×20 se dibuja centrado en el canvas 800×600 con la grilla neón y la pieza siguiente en el lateral derecho.
+- [x] `←`/`→` mueven la pieza, `↓` hace soft drop (+1 por fila), `↑` o `X` rotan con wall kicks, `Espacio` hace hard drop (+2 por celda); el HUD de React refleja la puntuación real al instante.
+- [x] Las teclas del juego no hacen scroll de página ni re-activan botones enfocados del HUD.
+- [x] Eliminar 1/2/3/4 líneas suma `100/300/500/800 × nivel` respectivamente; las líneas desaparecen del tablero y el HUD muestra el contador real.
+- [x] El nivel sube cada 10 líneas y la caída se acelera según `max(100, 1000 − (nivel − 1) × 90)` ms; el HUD muestra el nivel real.
+- [x] La pieza fantasma se dibuja con alpha 0.2 en la posición de aterrizaje y la pieza siguiente coincide con la que aparece después.
+- [x] Cuando la pieza nueva no cabe al aparecer, el `GameOverModal` aparece con la puntuación final real, sin reinicio con tecla.
+- [x] El botón PAUSA congela el juego y muestra el overlay "EN PAUSA"; REANUDAR continúa exactamente donde estaba.
+- [x] El botón FIN abre el `GameOverModal` con la puntuación real del momento.
+- [x] "GUARDAR PUNTUACIÓN" inserta la fila en `scores` con `game_id = 'caida'` (verificable con SQL) y muestra "▸ PUNTUACIÓN GUARDADA_".
+- [x] "JUGAR DE NUEVO" inicia una partida limpia (puntuación 0, líneas 0, nivel 1, tablero vacío); "VOLVER AL VAULT" navega sin que el loop siga corriendo.
+- [x] `/juego/caida` muestra la marca guardada en el leaderboard y el "Mejor global" real; `/salon` la muestra en la pestaña CAÍDA; la tarjeta de `/` y `/biblioteca` muestra "MEJOR PUNTUACIÓN" con el valor.
+- [x] `/jugar/rocas` se ve y juega igual que antes del refactor del registry; `/jugar/bloque-buster` y el resto de simulados se ven y funcionan igual que antes.
+- [x] `npm run build` completa sin errores.
+- [x] `npm run lint` no introduce errores nuevos en los archivos de este spec.
 
 ---
 
